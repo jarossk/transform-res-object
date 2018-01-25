@@ -1,6 +1,18 @@
 var express = require('express');
 var app = express();
 var winston = require('winston');
+var mung = require('express-mung');
+
+app.use(mung.json(
+    function transform(body, req, res) {
+        winston.log('info', {
+            Message: 'API REQUEST RESPONSE LOG', 
+            responseBody: JSON.stringify(body)
+        });
+        body.mungMessage = 'Message from mung!';
+        return body;
+    }
+))
 
 app.use(require('./controllers/api'));
 
